@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.v2ray.ang"
+    namespace = "cn.xuexi.android"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.v2ray.ang"
+        applicationId = "cn.xuexi.android"
         minSdk = 24
         targetSdk = 36
         versionCode = 713

@@ -31,7 +31,7 @@ data class V2rayConfig(
 
     data class InboundBean(
         var tag: String,
-        var port: Int,
+        var port: Int?,
         var protocol: String,
         var listen: String? = null,
         var settings: InSettingsBean? = null,
@@ -44,10 +44,16 @@ data class V2rayConfig(
             var auth: String? = null,
             var udp: Boolean? = null,
             var userLevel: Int? = null,
+            var accounts: List<SocksAccountBean>? = null,
             var name: String? = null,
-            @SerializedName("MTU")
+
             var mtu: Int? = null
-        )
+        ) {
+            data class SocksAccountBean(
+                var user: String = "",
+                var pass: String = ""
+            )
+        }
 
         data class SniffingBean(
             var enabled: Boolean,
@@ -62,7 +68,6 @@ data class V2rayConfig(
         var protocol: String,
         var settings: OutSettingsBean? = null,
         var streamSettings: StreamSettingsBean? = null,
-        val proxySettings: Any? = null,
         val sendThrough: String? = null,
         var mux: MuxBean? = MuxBean(false)
     ) {
@@ -76,7 +81,6 @@ data class V2rayConfig(
             var address: Any? = null,
             var port: Int? = null,
             /*Freedom*/
-            var domainStrategy: String? = null,
             val redirect: String? = null,
             val userLevel: Int? = null,
             /*Loopback*/
@@ -175,7 +179,7 @@ data class V2rayConfig(
                             @SerializedName("Accept-Encoding")
                             val acceptEncoding: List<String>? = null,
                             val Connection: List<String>? = null,
-                            val Pragma: String? = null
+                            val Pragma: Any? = null
                         )
                     }
                 }
@@ -250,7 +254,6 @@ data class V2rayConfig(
                 val disableSystemRoot: Boolean? = null,
                 val enableSessionResumption: Boolean? = null,
                 var echConfigList: String? = null,
-                var echForceQuery: String? = null,
                 var pinnedPeerCertSha256: String? = null,
                 // REALITY settings
                 val show: Boolean = false,
@@ -312,6 +315,7 @@ data class V2rayConfig(
                         )
                     }
                 }
+
                 data class QuicParamsBean(
                     var congestion: String? = null,
                     var brutalUp: String? = null,
@@ -338,19 +342,19 @@ data class V2rayConfig(
             if (protocol.equals(EConfigType.VMESS.name, true)
                 || protocol.equals(EConfigType.VLESS.name, true)
             ) {
-                return settings?.vnext?.first()?.address
+                return settings?.vnext?.firstOrNull()?.address ?: settings?.address as? String
             } else if (protocol.equals(EConfigType.SHADOWSOCKS.name, true)
                 || protocol.equals(EConfigType.SOCKS.name, true)
                 || protocol.equals(EConfigType.HTTP.name, true)
                 || protocol.equals(EConfigType.TROJAN.name, true)
             ) {
-                return settings?.servers?.first()?.address
+                return settings?.servers?.firstOrNull()?.address
             } else if (protocol.equals(EConfigType.WIREGUARD.name, true)) {
-                return settings?.peers?.first()?.endpoint?.substringBeforeLast(":")
+                return settings?.peers?.firstOrNull()?.endpoint?.substringBeforeLast(":")
             } else if (protocol.equals(EConfigType.HYSTERIA2.name, true)
                 || protocol.equals(EConfigType.HYSTERIA.name, true)
             ) {
-                return settings?.address as String?
+                return settings?.address as? String
             }
             return null
         }
@@ -359,15 +363,15 @@ data class V2rayConfig(
             if (protocol.equals(EConfigType.VMESS.name, true)
                 || protocol.equals(EConfigType.VLESS.name, true)
             ) {
-                return settings?.vnext?.first()?.port
+                return settings?.vnext?.firstOrNull()?.port ?: settings?.port
             } else if (protocol.equals(EConfigType.SHADOWSOCKS.name, true)
                 || protocol.equals(EConfigType.SOCKS.name, true)
                 || protocol.equals(EConfigType.HTTP.name, true)
                 || protocol.equals(EConfigType.TROJAN.name, true)
             ) {
-                return settings?.servers?.first()?.port
+                return settings?.servers?.firstOrNull()?.port
             } else if (protocol.equals(EConfigType.WIREGUARD.name, true)) {
-                return settings?.peers?.first()?.endpoint?.substringAfterLast(":")?.toInt()
+                return settings?.peers?.firstOrNull()?.endpoint?.substringAfterLast(":")?.toInt()
             } else if (protocol.equals(EConfigType.HYSTERIA2.name, true)
                 || protocol.equals(EConfigType.HYSTERIA.name, true)
             ) {
@@ -395,6 +399,7 @@ data class V2rayConfig(
         val clientIp: String? = null,
         val disableCache: Boolean? = null,
         val queryStrategy: String? = null,
+        val enableParallelQuery: Boolean? = null,
         val tag: String? = null
     ) {
         data class ServersBean(
@@ -417,8 +422,9 @@ data class V2rayConfig(
 
         data class RulesBean(
             var type: String = "field",
-            var ip: ArrayList<String>? = null,
-            var domain: ArrayList<String>? = null,
+            var ip: List<String>? = null,
+            var domain: List<String>? = null,
+            var process: List<String>? = null,
             var outboundTag: String? = null,
             var balancerTag: String? = null,
             var port: String? = null,

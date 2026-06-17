@@ -6,14 +6,14 @@ plugins {
 
 android {
     namespace = "com.v2ray.ang"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "cn.xuexi.android"
         minSdk = 24
-        targetSdk = 36
-        versionCode = 728
-        versionName = "2.1.8"
+        targetSdk = 37
+        versionCode = 734
+        versionName = "2.2.4"
         multiDexEnabled = true
 
         val abiFilterList = (properties["ABI_FILTERS"] as? String)?.split(';')
@@ -21,7 +21,7 @@ android {
             abi {
                 isEnable = true
                 reset()
-                if (abiFilterList != null && abiFilterList.isNotEmpty()) {
+                if (!abiFilterList.isNullOrEmpty()) {
                     include(*abiFilterList.toTypedArray())
                 } else {
                     include(

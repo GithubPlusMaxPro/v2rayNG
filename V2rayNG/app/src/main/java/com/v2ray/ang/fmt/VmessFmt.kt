@@ -2,8 +2,8 @@ package com.v2ray.ang.fmt
 
 import android.text.TextUtils
 import com.v2ray.ang.AppConfig
-import com.v2ray.ang.dto.entities.ProfileItem
 import com.v2ray.ang.dto.VmessQRCode
+import com.v2ray.ang.dto.entities.ProfileItem
 import com.v2ray.ang.enums.EConfigType
 import com.v2ray.ang.enums.NetworkType
 import com.v2ray.ang.extension.idnHost
@@ -26,7 +26,6 @@ object VmessFmt : FmtBase() {
             return parseVmessStd(str)
         }
 
-        val allowInsecure = MmkvManager.decodeSettingsBool(AppConfig.PREF_ALLOW_INSECURE, false)
         val config = ProfileItem.create(EConfigType.VMESS)
 
         var result = str.replace(EConfigType.VMESS.protocolScheme, "")
@@ -87,8 +86,11 @@ object VmessFmt : FmtBase() {
         config.insecure = when (vmessQRCode.insecure) {
             "1" -> true
             "0" -> false
-            else -> allowInsecure
+            else -> false
         }
+        config.verifyPeerCertByName = vmessQRCode.vcn
+        config.pinnedCA256 = vmessQRCode.pcs
+
         return config
     }
 
@@ -142,6 +144,8 @@ object VmessFmt : FmtBase() {
             false -> "0"
             else -> ""
         }
+        vmessQRCode.vcn = config.verifyPeerCertByName.orEmpty()
+        vmessQRCode.pcs = config.pinnedCA256.orEmpty()
 
         val json = JsonUtil.toJson(vmessQRCode)
         return Utils.encode(json)
@@ -154,7 +158,6 @@ object VmessFmt : FmtBase() {
      * @return the parsed ProfileItem object, or null if parsing fails
      */
     fun parseVmessStd(str: String): ProfileItem? {
-        val allowInsecure = MmkvManager.decodeSettingsBool(AppConfig.PREF_ALLOW_INSECURE, false)
         val config = ProfileItem.create(EConfigType.VMESS)
 
         val uri = URI(Utils.fixIllegalUrl(str))
@@ -167,7 +170,7 @@ object VmessFmt : FmtBase() {
         config.password = uri.userInfo
         config.method = AppConfig.DEFAULT_SECURITY
 
-        getItemFormQuery(config, queryParam, allowInsecure)
+        getItemFormQuery(config, queryParam)
 
         return config
     }

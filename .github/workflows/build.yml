@@ -136,10 +136,10 @@ jobs:
           mkdir -p release-files
           find release -type f -name '*.apk' -exec cp {} release-files/ \;
 
-      - name: Upload APKs, signatures and public key to release
-        uses: svenstaro/upload-release-action@v2
+      - name: Upload APKs to release
+        uses: softprops/action-gh-release@v2
         with:
-          file: release-files/*
-          tag: ${{ inputs.release_tag }}
-          file_glob: true
+          tag_name: ${{ inputs.release_tag }}
+          name: ${{ inputs.release_tag }}
           prerelease: true
+          files: release-files/*.apk

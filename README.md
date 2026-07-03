@@ -1,4 +1,4 @@
-# v2rayNG
+# 学习墙国
 
 A V2Ray client for Android, support [Xray core](https://github.com/XTLS/Xray-core) and [v2fly core](https://github.com/v2fly/v2ray-core)
 
@@ -11,21 +11,6 @@ A V2Ray client for Android, support [Xray core](https://github.com/XTLS/Xray-cor
 
 ---
 
-## Download / 下载
-
-Download the latest release here:
-
-在这里下载最新版本：
-
-[https://github.com/2dust/v2rayNG/releases](https://github.com/2dust/v2rayNG/releases)
-
-> [!TIP]
-> v2rayNG is the mobile version. For the desktop version, please visit the v2rayN \
-> v2rayNG 是手机版，电脑版请访问 v2rayN
->
-> https://github.com/2dust/v2rayN
-
----
 
 ### Geoip and Geosite
 

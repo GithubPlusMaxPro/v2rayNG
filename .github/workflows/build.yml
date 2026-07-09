@@ -4,9 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: "Release tag. Default is latest."
-        required: false
-        default: "latest"
+        description: "Release version, example: 2.2.7"
+        required: true
         type: string
 
 permissions:
@@ -170,12 +169,25 @@ jobs:
           echo "Release files:"
           ls -lh release-files
 
-      - name: Upload APKs, signatures and public key to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: release-files/*
-          tag: ${{ inputs.release_tag }}
-          file_glob: true
-          overwrite: true
-          prerelease: true
+      - name: Create or update GitHub Release
+        run: |
+          TAG="${{ inputs.release_tag }}"
+
+          echo "Release tag: $TAG"
+          echo "Release files:"
+          ls -lh release-files
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release exists, uploading files..."
+            gh release upload "$TAG" release-files/* --clobber
+            gh release edit "$TAG" --title "$TAG" --latest
+          else
+            echo "Release does not exist, creating release..."
+            gh release create "$TAG" release-files/* \
+              --title "$TAG" \
+              --notes "APK build" \
+              --latest
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}

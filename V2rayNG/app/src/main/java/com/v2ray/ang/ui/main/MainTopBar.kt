@@ -1,12 +1,10 @@
 package com.v2ray.ang.ui.main
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
@@ -65,11 +63,7 @@ fun MainTopBar(
                 }
             } else {
                 IconButton(onClick = onMenuClick) {
-                    Image(
-                        painter = painterResource(R.drawable.ic_launcher),
-                        contentDescription = stringResource(R.string.acc_open_menu),
-                        modifier = Modifier.size(24.dp)
-                    )
+                    Icon(painterResource(R.drawable.ic_menu_24dp), contentDescription = stringResource(R.string.acc_open_menu))
                 }
             }
         },

@@ -99,7 +99,7 @@ fun MainTopBar(
             Box(modifier = Modifier.wrapContentSize(Alignment.TopEnd)) {
                 IconButton(onClick = { showMenu = true }) {
                     Image(
-                        painter = painterResource(R.mipmap.ic_launcher),
+                        painter = painterResource(R.drawable.ic_launcher),
                         contentDescription = stringResource(R.string.acc_more),
                         modifier = Modifier.size(24.dp)
                     )
